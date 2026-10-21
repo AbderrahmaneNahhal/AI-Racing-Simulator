@@ -12,7 +12,7 @@ du PDF ne sont pas transposées automatiquement à la promotion actuelle.
 
 - Auteur(s), groupe et promotion : **[À COMPLÉTER]**
 - URL GitHub du dépôt : [AbderrahmaneNahhal/AI-Racing-Simulator](https://github.com/AbderrahmaneNahhal/AI-Racing-Simulator)
-- URL du jeu hébergé, GitHub Pages ou itch.io : **[À COMPLÉTER]**
+- URL du jeu hébergé : **non confirmée — GitHub Pages renvoie HTTP 404 lors de la publication.**
 - URL YouTube, démonstration de 1 à 2 minutes : **[À COMPLÉTER]**
 
 Aucun hébergement, résultat de champion, expérience personnelle ou lien de remise
@@ -32,7 +32,7 @@ Internet est nécessaire pour les CDN p5.js, TensorFlow.js et ML5.
 Pour GitHub Pages : copier **le contenu de ce dossier** à la racine du dépôt de
 livraison, puis activer Pages dans les paramètres GitHub, branche choisie et dossier racine.
 Le fichier `index.html` est déjà à la racine ; les chemins locaux sont relatifs,
-compatibles avec un site de projet GitHub Pages. Aucun déploiement n'a été effectué.
+compatibles avec un site de projet GitHub Pages. Le code est publié sur GitHub. GitHub Pages reste à activer : Settings > Pages > Deploy from a branch > main > / (root) > Save. Le contrôle public du 21 octobre 2026 renvoie HTTP 404 ; aucun lien de jeu fonctionnel n'est confirmé.
 Vérifier ensuite les modes, le Garage et ML5 depuis l'URL publique.
 
 **Exporter les champions JSON avant de changer d'origine** : IndexedDB est propre
