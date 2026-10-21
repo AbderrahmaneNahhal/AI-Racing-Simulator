@@ -8,15 +8,21 @@ pages **physiques 52–55** du PDF *Steering behaviors Master Miage IA2*, sujet
 Nice 2025–2026, conformément à la mission de finalisation. Les échéances anciennes
 du PDF ne sont pas transposées automatiquement à la promotion actuelle.
 
-## Informations de livraison à compléter
+## Liens du projet
 
-- Auteur(s), groupe et promotion : **[À COMPLÉTER]**
-- URL GitHub du dépôt : [AbderrahmaneNahhal/AI-Racing-Simulator](https://github.com/AbderrahmaneNahhal/AI-Racing-Simulator)
-- URL du jeu hébergé : **non confirmée — GitHub Pages renvoie HTTP 404 lors de la publication.**
-- URL YouTube, démonstration de 1 à 2 minutes : **[À COMPLÉTER]**
+- **Code source GitHub :** [AI-Racing-Simulator](https://github.com/AbderrahmaneNahhal/AI-Racing-Simulator)
+- **Jeu hébergé sur GitHub Pages :** [Jouer au simulateur](https://abderrahmanenahhal.github.io/AI-Racing-Simulator/)
+- **Vidéo de démonstration YouTube :** [Voir la démonstration](https://www.youtube.com/watch?v=Bw3p5AK3I1I)
 
-Aucun hébergement, résultat de champion, expérience personnelle ou lien de remise
-n'est inventé. Compléter les champs avant remise.
+## Identité universitaire
+
+- **Auteur :** NAHHAL Abderrahmane
+- **Groupe :** Groupe 1
+- **Promotion :** 2026/2027
+- **Formation :** Master IA2 — Intelligence Artificielle Appliquée
+- **Université :** Université Côte d'Azur
+- **Établissement partenaire :** EMSI Casablanca
+- **Module :** Intelligence Artificielle Réactive
 
 ## Lancement et hébergement statique
 
@@ -29,11 +35,11 @@ python -m http.server 8000 --bind 127.0.0.1
 Ouvrir <http://127.0.0.1:8000/>. Utiliser localhost ou HTTPS, pas `file://`.
 Internet est nécessaire pour les CDN p5.js, TensorFlow.js et ML5.
 
-Pour GitHub Pages : copier **le contenu de ce dossier** à la racine du dépôt de
-livraison, puis activer Pages dans les paramètres GitHub, branche choisie et dossier racine.
-Le fichier `index.html` est déjà à la racine ; les chemins locaux sont relatifs,
-compatibles avec un site de projet GitHub Pages. Le code est publié sur GitHub. GitHub Pages reste à activer : Settings > Pages > Deploy from a branch > main > / (root) > Save. Le contrôle public du 21 octobre 2026 renvoie HTTP 404 ; aucun lien de jeu fonctionnel n'est confirmé.
-Vérifier ensuite les modes, le Garage et ML5 depuis l'URL publique.
+Le projet est publié depuis la racine du dépôt sur GitHub Pages. Le 21 octobre 2026,
+le dépôt et la page publique répondent en **HTTP 200** ; la page servie référence
+bien le script du simulateur. Ce contrôle HTTP ne constitue pas une nouvelle
+validation interactive de tous les modes de jeu.
+Le fichier `index.html` est à la racine et les chemins locaux sont relatifs.
 
 **Exporter les champions JSON avant de changer d'origine** : IndexedDB est propre
 à l'origine du navigateur. Les cerveaux locaux ne sont pas transférés automatiquement.
@@ -241,15 +247,15 @@ ou des mesures scientifiques du simulateur. Le vote n'est pas une probabilité
 calibrée, et le descripteur RGB ne reconnaît pas une voiture dans une photo.
 
 La page est isolée : aucune caméra, aucun micro, aucune substitution du TF.js 1.1
-du simulateur. Le CDN ML5 est chargé seulement après action utilisateur. Le test
-Edge exécute une véritable prédiction et vérifie l'absence d'effet sur les tenseurs
+du simulateur. Le CDN ML5 est chargé seulement après action utilisateur. Le test Edge décrit dans le README antérieur, absent de cette copie,
+exécute une véritable prédiction et vérifie l'absence d'effet sur les tenseurs
 du simulateur. Références : [exemples officiels ML5](https://ml5js.github.io/ml5-examples/public/)
 et [bibliothèque ML5](https://github.com/ml5js/ml5-library).
 
 ## Tests, performances et limites
 
-La source avait **125/125 tests unitaires réussis** avant préparation.
-L'intégration complète **Edge a été réexécutée avec succès depuis cette copie** :
+Le README antérieur rapporte **125/125 tests unitaires réussis** avant préparation
+et une intégration complète **Edge réussie depuis la copie de livraison** :
 Training, Demo, Garage et persistance, les deux formats Race (2–8, ×1/×10), JSON,
 circuits et véritable prédiction ML5. Aucune erreur JavaScript non interceptée observée.
 Les tests, captures et audits restent dans le projet original, hors de cette copie statique.
@@ -266,29 +272,96 @@ Les tests, captures et audits restent dans le projet original, hors de cette cop
 
 ## MON EXPERIENCE
 
-**Rubriques à rédiger personnellement avant remise. Ceci n'est pas un récit
-certifié ou une expérience inventée.**
+### Choix du projet
 
-### Pourquoi j'ai choisi ce projet
+Je présente un simulateur de voitures autonomes parce qu'il permet de relier des
+notions abstraites à un comportement observable : percevoir les murs, choisir une
+direction et adapter une vitesse. J'y étudie l'articulation entre l'IA réactive,
+les capteurs et l'apprentissage par neuroévolution. La distinction entre objectif,
+force de pilotage et locomotion, rappelée dans les consignes du projet, me donne
+un cadre pour analyser les décisions des agents sans recourir à une trajectoire
+prédéfinie.
 
-[À COMPLÉTER PAR L'ÉTUDIANT : motivation et objectifs personnels.]
+### Développement et fonctionnalités
 
-### Mes choix techniques
+Mon projet comprend un mode Training dans lequel une population de voitures est
+évaluée sur un circuit. Les capteurs mesurent la proximité des murs ; leurs valeurs
+alimentent un réseau neuronal qui produit une direction et une vitesse désirées.
+La progression aux checkpoints sert à calculer la fitness. L'algorithme génétique
+sélectionne des parents par roulette pondérée, copie leurs réseaux et applique des
+mutations pour former la génération suivante. Ce mécanisme permet d'étudier une
+évolution des comportements sans rétropropagation pendant Training.
 
-[À COMPLÉTER PAR L'ÉTUDIANT : comportements, réseaux, fitness, réglages et raisons de ces choix.]
+Je peux configurer l'architecture du réseau, notamment le nombre de couches cachées
+et leur largeur respective, ainsi que l'activation Sigmoid ou ReLU. Les sorties
+restent sigmoïdes pour respecter l'intervalle attendu par le pilotage. Les circuits
+prédéfinis et le générateur paramétrique permettent de varier les conditions ;
+les circuits personnalisés peuvent être sauvegardés et échangés en JSON.
 
-### Les difficultés rencontrées
+Le Garage conserve les cerveaux entraînés dans IndexedDB et permet leur import
+et leur export. Je peux ainsi réutiliser des poids figés en Demo et comparer des
+cerveaux en Race, en contre-la-montre ou en course simultanée. Ces deux formats
+n'imposent pas les mêmes contraintes : la course simultanée ajoute des interactions
+locales entre véhicules. L'atelier ML5.js, présent dans un dossier séparé, illustre
+une autre approche avec un classifieur KNN de couleurs RGB ; il n'entraîne pas les
+cerveaux des voitures.
 
-[À COMPLÉTER PAR L'ÉTUDIANT : difficultés réellement observées.]
+### Réglages et expérimentations
 
-### Comment je les ai résolues
+Je dispose de réglages pour la population (10 à 300 voitures), la mutation
+(0 à 100 %), les capteurs (3 à 15), la distance de vision (20 à 200), les couches
+cachées (1 à 3) et leur largeur (4 à 48 neurones). Les critères d'arrêt peuvent
+porter sur le nombre de générations terminées ou sur un objectif de réussite.
+La vitesse d'exécution, de ×1 à ×10, change le nombre de pas par image.
 
-[À COMPLÉTER PAR L'ÉTUDIANT : démarches, essais, vérifications et limites rencontrées.]
+Pour comparer des configurations, je peux conserver le circuit et les conditions
+de départ, puis modifier un seul paramètre. La progression, le taux de réussite
+par génération et les pas actifs en Race fournissent des indicateurs distincts.
+Je distingue ce protocole possible de résultats effectivement établis : aucun
+journal d'expériences personnelles ni résultat chiffré de champion n'est joint à
+cette livraison. Je ne conclus donc pas à la supériorité d'une configuration.
 
-### Mon utilisation réelle de VS Code, Codex et des modèles IA
+### Difficultés et solutions vérifiables
 
-[À COMPLÉTER PAR L'ÉTUDIANT : IDE effectivement utilisé, rôle de Codex, modèles exacts vérifiés
-dans les outils, tâches assistées et code compris/vérifié personnellement.]
+Dans mon analyse du code, la fiabilité de la sauvegarde est un point de vigilance.
+Le Garage attend la fin de la transaction IndexedDB, via `transaction.oncomplete`,
+avant de confirmer une écriture ; le succès d'une requête isolée ne suffit pas.
+Les erreurs et interruptions de transaction sont prises en charge. Cette solution
+est visible dans `garageStore.js`, sans que j'attribue ici une chronologie de bugs
+ou de corrections à des essais personnels non documentés.
+
+La compatibilité des cerveaux constitue un autre enjeu. Les validations contrôlent
+la topologie, les dimensions des poids et leurs valeurs. Le format v1 conserve
+les configurations Sigmoid à couches uniformes ; ReLU ou des largeurs différentes
+nécessitent le format v2. Cette distinction permet de réutiliser les anciens
+cerveaux tout en explicitant les limites de compatibilité.
+
+Pour la livraison, je retiens également la séparation entre publication du code
+et disponibilité du site. Le premier contrôle GitHub Pages renvoyait HTTP 404 ;
+le contrôle actuel répond HTTP 200 et sert la page du simulateur. Le stockage du
+Garage reste propre à chaque origine : un export JSON est nécessaire pour
+transférer les cerveaux de localhost vers le site publié.
+
+### IDE et assistance par IA
+
+J'utilise **Visual Studio Code** comme IDE. **Codex** intervient dans l'analyse du
+code, les modifications, les vérifications et la préparation de la livraison.
+**ChatGPT** est utilisé pour préparer les consignes, accompagner le travail et
+structurer la documentation. Le développement est donc assisté par IA ; je ne
+présente pas l'ensemble du code comme ayant été écrit manuellement.
+
+Ces noms désignent des outils et services, et ne permettent pas d'identifier les
+modèles sous-jacents : **Versions exactes des modèles IA non documentées**.
+Les consignes et prompts réellement conservés restent accessibles dans le dépôt.
+
+### Bilan
+
+Ce travail me permet de mettre en relation les entrées d'un réseau neuronal, ses
+sorties et le déplacement d'un agent autonome. Il donne un support concret pour
+comprendre la sélection et la mutation des réseaux, ainsi que la différence entre
+apprentissage, réutilisation d'un cerveau et évaluation en compétition. J'en retiens
+que la réussite dans une condition donnée ne suffit pas à démontrer la
+généralisation : le circuit, le départ et les interactions doivent être précisés.
 
 ## Consignes IA et documentation conservées
 
@@ -299,10 +372,39 @@ Ces copies pédagogiques contiennent des renvois historiques au dépôt du cours
 ce ne sont pas des dépendances d'exécution. Les documents `assets/*.md` conservent
 la provenance et les prompts des visuels, y compris leur historique.
 
-L'utilisation de **VS Code** (contexte IDE) et de **Codex** (assistance au code) est
-vérifiée dans cette session. Les noms exacts des modèles employés personnellement
-restent **À COMPLÉTER PAR L'ÉTUDIANT après vérification**.
+## Crédits, ressources et licences
 
-Avant remise : compléter identité et expérience, ajouter les liens réels du dépôt,
-de GitHub Pages et de YouTube (vidéo de 1 à 2 minutes), exporter les vrais champions,
-puis vérifier le site publié. Aucun résultat, vécu ou lien n'a été inventé.
+- **Code pédagogique fourni dans le cadre du cours :** `vehicle.js`, `ga.js`,
+  `nn.js`, `ray.js` et `boundary.js`. Ils sont préservés ; leur présence dans ce
+  dépôt ne vaut pas attribution exclusive à l'étudiant. La référence vidéo
+  présente dans `ray.js` est conservée. **Licence ou autorisation à vérifier**
+  pour la redistribution du code pédagogique ; aucun texte de licence générale
+  n'est fourni dans cette copie.
+- **Référence conceptuelle :** Craig W. Reynolds, « Steering Behaviors for
+  Autonomous Characters », GDC 1999, mentionnée dans les consignes du cours.
+  Le PDF cité par ces archives n'est pas inclus dans cette livraison.
+- **Bibliothèques externes :** p5.js 0.8.0 et son extension DOM, TensorFlow.js 1.1.0,
+  ainsi que ML5.js 0.12.2 dans l'atelier séparé, chargés depuis des CDN. Ces
+  bibliothèques restent soumises à leurs propres licences ; leurs textes ne sont
+  pas inclus dans cette copie. **Licence ou autorisation à vérifier** auprès des
+  projets respectifs avant redistribution de leurs fichiers.
+- **Ressources graphiques :** les documents
+  [PROMPTS](assets/PROMPTS.md) et
+  [MEDITERRANEAN_ASSETS](assets/MEDITERRANEAN_ASSETS.md) décrivent les générations
+  avec imagegen et les références visuelles fournies. Leurs attributions et
+  prompts sont préservés. Certaines mentions décrivent des versions historiques
+  absentes de la copie actuelle. La provenance détaillée de chaque variante
+  d'accueil et les droits sur les images de référence ne sont pas entièrement
+  établis : **Licence ou autorisation à vérifier**.
+- **Ressources sonores :** aucun fichier audio n'est présent dans cette livraison.
+  Les mentions sonores des consignes historiques concernent d'autres exemples
+  du cours et ne constituent pas des crédits audio du simulateur.
+
+Aucune licence MIT globale n'est déclarée pour ce projet. Les droits des composants
+et des références doivent être distingués de la contribution de l'étudiant.
+
+Les résultats historiques de tests indiqués plus haut sont ceux rapportés par le
+README antérieur. Les scripts et rapports correspondants sont absents de cette
+copie statique ; ces résultats n'ont pas été réexécutés lors de la finalisation
+documentaire. Avant remise, il reste à relire personnellement le récit, vérifier
+les autorisations et joindre les véritables exports de champions si requis.
