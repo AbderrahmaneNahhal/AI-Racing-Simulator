@@ -1,0 +1,113 @@
+/* Full viewport composition. Both artwork and transparent buttons share the same
+   uniformly scaled cover plane. The panoramic source keeps GT3/logo in its safe crop. */
+body[data-page=home] {overflow:hidden;}
+.home-screen {position:fixed;inset:0;width:100%;height:100dvh;max-width:none;isolation:isolate;display:block;padding:0;margin:0;overflow:hidden;}
+.home-screen::before {content:"";position:absolute;inset:-24px;z-index:-1;background:url("assets/nice-circuit-clean.png") center / cover no-repeat;pointer-events:none;}
+.home-stage {position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:max(100vw,calc(100dvh * 1672 / 941));aspect-ratio:1672 / 941;}
+.home-art {display:block;width:100%;height:auto;}
+.home-actions {position:absolute;inset:0;}
+.home-card {position:absolute;top:calc(100% * 288 / 941);height:calc(100% * 294 / 941);border-radius:1.1vw;cursor:pointer;}
+.home-card.training {left:calc(100% * 432 / 1672);width:calc(100% * 392 / 1672);}
+.home-card.race {left:calc(100% * 854 / 1672);width:calc(100% * 390 / 1672);}
+@media(min-aspect-ratio:182/100),(max-aspect-ratio:172/100) {
+  .home-stage {width:max(100vw,calc(100dvh * 1931 / 814));aspect-ratio:1931 / 814;}
+  .home-card {top:calc(100% * 282 / 814);height:calc(100% * 234 / 814);}
+  .home-card.training {left:calc(100% * 672 / 1931);width:calc(100% * 315 / 1931);}
+  .home-card.race {left:calc(100% * 1009 / 1931);width:calc(100% * 311 / 1931);}
+}
+/* On phones prioritize both complete touch targets over filling with a crop of one card. */
+@media(max-aspect-ratio:1/1) {
+  .home-stage {width:100vw;}
+  .home-art {mask-image:linear-gradient(to bottom,transparent,#000 4%,#000 96%,transparent);}
+}
+.home-card,.home-card:hover:enabled,.home-card:active:enabled {padding:0;margin:0;border:0;background:transparent;box-shadow:none;transform:none;}
+.home-card:focus-visible {outline:3px solid #fff;outline-offset:3px;}
+.screen-reader-only {position:absolute!important;top:0;left:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;}
+/* Desktop cockpit: the viewport has a real finite height. Only the sidebar scrolls. */
+body[data-page=simulation] {overflow:hidden;}
+#simulation-screen {max-width:none;width:100%;height:100dvh;padding:10px 14px;display:grid;grid-template-rows:62px minmax(0,1fr);gap:10px;}
+#simulation-screen .page-header {margin:0;padding:0 4px 10px;gap:18px;justify-content:initial;border-color:#30445a;}
+.cockpit-brand {font-size:19px;line-height:1.2;white-space:nowrap;margin:0;font-weight:800;letter-spacing:-.04em;}
+.cockpit-brand span {color:#65bcff;}.cockpit-brand small {display:block;font-size:9px;letter-spacing:.18em;color:#9fb3c6;margin-top:4px;font-weight:500;}
+#simulation-screen .mode-toolbar {margin:0;gap:8px;flex:1;font-size:11px;justify-content:flex-start;}
+#simulation-screen .mode-toolbar select {max-width:230px;font-size:12px;}
+.cockpit-nav {margin-left:auto;display:flex;gap:8px;align-items:center;}
+.cockpit-nav button {padding:8px 13px;font-size:12px;white-space:nowrap;}
+#simulation-screen .live-indicator {font-size:11px;max-width:245px;overflow-wrap:anywhere;white-space:normal;}
+#simulation-screen .workspace {min-height:0;grid-template-columns:minmax(0,2.7fr) minmax(300px,1fr);gap:12px;align-items:stretch;}
+#simulation-screen .track-panel {position:static;min-height:0;display:grid;grid-template-rows:32px minmax(0,1fr) auto auto;}
+#simulation-screen .panel-heading {padding:8px 12px;box-shadow:none;}
+#simulation-screen #circuit {min-height:0;min-width:0;display:flex;align-items:center;justify-content:center;background:#101b22;}
+#simulation-screen #circuit canvas {width:var(--display-width,100%)!important;height:var(--display-height,auto)!important;max-width:100%;max-height:100%;flex:none;}
+#simulation-screen .camera-toolbar,#simulation-screen .track-toolbar {padding:8px 12px;gap:10px;font-size:11px;}
+#simulation-screen .camera-toolbar small {display:none;}
+#simulation-screen .track-toolbar {border:1px solid #354a51;border-radius:0 0 12px 12px;}
+#simulation-screen .sidebar {display:flex;flex-direction:column;gap:12px;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-right:5px;scrollbar-width:thin;scrollbar-color:#516d84 #15202c;}
+#simulation-screen .sidebar>* {flex-shrink:0;}
+#simulation-screen .sidebar .panel {padding:15px;}
+#simulation-screen .race-pilots,#simulation-screen .race-rule-details {border:1px solid #3b5064;border-radius:8px;padding:12px;margin:12px 0;}
+#simulation-screen .race-pilots>summary,#simulation-screen .race-rule-details>summary {font-size:12px;color:#d6e7f5;}
+#simulation-screen .race-pilots>details {margin-top:14px;}
+#simulation-screen .metrics {gap:12px;margin:0 0 15px;padding-bottom:15px;}
+#simulation-screen dd {font-size:1.25rem;}
+#simulation-screen .vehicle-inspector {margin:0;gap:8px;flex-wrap:wrap;}
+#simulation-screen #car-preview {width:140px;height:80px;}
+#simulation-screen .vehicle-inspector>div {padding:8px;flex:1;min-width:120px;}
+#simulation-screen .vehicle-inspector p {font-size:11px;}
+#simulation-screen .telemetry {border-radius:10px;padding:12px;display:block;}
+#simulation-screen .telemetry p {text-align:left;margin-bottom:0;}
+#simulation-screen footer {padding:10px 3px;line-height:1.6;}
+body[data-mode=training] #simulation-screen {--mode-accent:#58b9ff;}
+body[data-mode=race] #simulation-screen {--mode-accent:#ff6472;}
+#simulation-screen .panel-heading {border-top:2px solid var(--mode-accent,#58b9ff);}
+#simulation-screen .primary {background:var(--mode-accent,#58b9ff);border-color:var(--mode-accent,#58b9ff);color:#091724;}
+@media(max-width:900px) {
+  body[data-page=simulation] {overflow:auto;}
+  #simulation-screen {height:auto;min-height:100svh;grid-template-rows:auto auto;padding:8px;}
+  #simulation-screen .page-header {flex-wrap:wrap;padding:8px;gap:12px;}
+  #simulation-screen .workspace {grid-template-columns:minmax(0,1fr);}
+  #simulation-screen .track-panel {grid-template-rows:auto minmax(200px,min(55svh,calc((100vw - 24px) * 2 / 3 + 8px))) auto auto;}
+  #simulation-screen .sidebar {overflow:visible;min-height:auto;padding:0;}
+  #simulation-screen .live-indicator {order:3;max-width:none;}
+  #simulation-screen .mode-toolbar {flex:none;}
+}
+@media(max-width:560px) {
+  .cockpit-brand {font-size:16px;}.cockpit-nav button {padding:7px 10px;}
+  #simulation-screen .mode-toolbar {width:100%;order:4;}.cockpit-nav {margin-left:auto;}
+  #simulation-screen .camera-toolbar {flex-wrap:wrap;}
+}
+
+/* Mediterranean cockpit skin: retain every existing control and layout rule. */
+body[data-page=simulation] {background:radial-gradient(ellipse at 85% 0%,#2a0c13,transparent 50%),#08090c;color:#f0edf0;}
+body[data-mode=training] #simulation-screen,body[data-mode=race] #simulation-screen {--mode-accent:#f33343;}
+#simulation-screen .page-header {border-color:#70232d;}
+#simulation-screen .cockpit-brand span {color:#ff3545;}
+#simulation-screen .panel {background:linear-gradient(135deg,#171519,#0c0e12 75%);border-color:#70303a;box-shadow:inset 0 1px #fff05,0 8px 25px #0003;}
+#simulation-screen .panel-heading {background:linear-gradient(100deg,#5a111c,#171014 65%);border-color:#a82a39;}
+#simulation-screen .eyebrow {color:#f1e7e9;}
+#simulation-screen .camera-toolbar,#simulation-screen .track-toolbar,#simulation-screen .telemetry {background:#101115;border-color:#63323a;}
+#simulation-screen #circuit {background:#11171a;border-color:#78313a;}
+#simulation-screen dd,#simulation-screen .cockpit-brand span,#simulation-screen .camera-toolbar output {color:#ff3b4c;}
+#simulation-screen .metrics {border-color:#393138;}
+#simulation-screen button {background:linear-gradient(#232429,#111318);border-color:#4d454c;color:#f7f2f3;}
+#simulation-screen button:hover:enabled {border-color:#f24554;background:linear-gradient(#3b1b24,#25141b);}
+#simulation-screen .primary {background:linear-gradient(120deg,#e51f31,#a60e20);border-color:#ff4253;color:#fff;}
+#simulation-screen input,#simulation-screen select {background-color:#17171c;border-color:#564048;color:#eee9ec;accent-color:#f33343;}
+#simulation-screen .garage-capture input {background:#17171c;}
+#simulation-screen .garage-capture a {color:#ff6d79;}
+#simulation-screen .garage-capture,#simulation-screen .race-entry,#simulation-screen .garage-card {border-color:#443039;}
+#simulation-screen .live-indicator {color:#91e2b3;}
+#simulation-screen th {background:#24171d;color:#e0c9d1;}
+#simulation-screen th,#simulation-screen td {border-color:#3d2c34;}
+#simulation-screen #performance-chart {background:linear-gradient(#18151d,#101116);}
+#simulation-screen .telemetry strong {color:#f2dce1;}
+#simulation-screen input[type=range] {appearance:none;height:7px;border:1px solid #49414a;border-radius:12px;background:linear-gradient(90deg,#d8293b,#692732);}
+#simulation-screen input[type=range]::-webkit-slider-thumb {appearance:none;width:17px;height:17px;border:1px solid #ff6370;border-radius:50%;background:#f33343;box-shadow:0 0 0 3px #f3334314;}
+
+/* A continuous world-aligned scenery surface fills the contain-fit margins. */
+#simulation-screen #circuit {position:relative;isolation:isolate;}
+#simulation-screen #circuit canvas:not(.scenery-viewport) {position:relative;z-index:1;}
+#simulation-screen #circuit canvas.world-proxy {opacity:0;}
+#simulation-screen #circuit canvas.scenery-viewport {position:absolute;inset:0;z-index:0;width:100%!important;height:100%!important;max-width:none;max-height:none;pointer-events:none;}
+.inspector-details {display:none!important;}
+

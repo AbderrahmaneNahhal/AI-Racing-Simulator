@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atelier ML5 — reconnaissance de livrées</title><link rel="stylesheet" href="../styles.css">
+<main><h1>Atelier ML5 · reconnaissance de livrées</h1>
+<p>Mini-projet séparé : un classifieur de plus proches voisins ML5 apprend des exemples de couleurs RGB. Aucun accès caméra ou micro. Aucun cerveau automobile, poids, Garage ou contrôle de conduite n'est modifié.</p>
+<section class="panel"><h2>1. Charger les exemples</h2>
+<p>Huit exemples pédagogiques fournis manuellement : deux nuances par famille (rouge, bleu, vert, jaune). Ce ne sont ni des champions entraînés ni des mesures expérimentales du simulateur.</p>
+<button id="ml5-start">Charger ML5 et les exemples</button>
+<h2>2. Tester une couleur</h2><label>Couleur de carrosserie <input id="livery-color" type="color" value="#2878e6"></label>
+<button id="ml5-predict" disabled>Classer avec ML5</button>
+<p id="ml5-result" role="status" aria-live="polite">Le chargement nécessite Internet. ML5 0.12.2 sera chargé dans cette page isolée.</p>
+<h2>3. Ajouter vos propres exemples</h2><label>Famille <input id="livery-label" value="Bleu" maxlength="40"></label>
+<button id="ml5-add" disabled>Apprendre cette couleur</button><p id="ml5-count">0 exemple actif</p>
+<p>La confiance est la proportion de votes des 3 voisins, pas une probabilité calibrée. Le descripteur utilise RGB et une constante évitant un vecteur nul. La luminosité et les couleurs ambiguës limitent la classification ; il ne reconnaît pas une voiture dans une photo. Exemples conservés seulement pendant cette visite, maximum 64.</p>
+<a href="../index.html">Ouvrir le simulateur</a> · <a href="https://ml5js.github.io/ml5-examples/public/" target="_blank" rel="noopener">Exemples officiels ML5</a>
+</section></main><script src="colorFeatures.js"></script><script src="demo.js"></script></html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Racing Evolution Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="appShell.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.1.0/dist/tf.min.js"></script>
+</head>
+<body data-page="home" data-mode="training">
+<section id="home-screen" class="home-screen" aria-label="Accueil AI Racing Simulator">
+  <h1 class="screen-reader-only">AI Racing Simulator — Nice Circuit</h1>
+  <div class="home-stage">
+    <picture>
+      <source media="(min-aspect-ratio:182/100), (max-aspect-ratio:172/100)" srcset="assets/nice-menu-panorama.png">
+      <img class="home-art" src="assets/nice-menu-final-no-gear.png" width="1672" height="941" fetchpriority="high" alt="Nice au coucher du soleil, Promenade des Anglais, mer Méditerranée, panneau NICE CIRCUIT et voiture GT3 entièrement cadrée.">
+    </picture>
+    <nav class="home-actions" aria-label="Choisir un mode">
+      <button type="button" class="home-card training" data-open-mode="training" disabled aria-label="Entraînement IA — ouvrir le mode entraînement" aria-describedby="home-status"></button>
+      <button type="button" class="home-card race" data-open-mode="race" disabled aria-label="Course — ouvrir le mode compétition" aria-describedby="home-status"></button>
+    </nav>
+  </div>
+  <p id="home-status" class="screen-reader-only" role="status">Initialisation du simulateur…</p>
+</section>
+<main id="simulation-screen" hidden>
+  <header class="page-header">
+    <h1 class="cockpit-brand">AI <span>RACING</span><small>EVOLUTION SIMULATOR</small></h1>
+    <div class="mode-toolbar"><label for="simulation-mode">Mode</label><select id="simulation-mode"><option value="training">Training · neuro-évolution</option><option value="race">Race · cerveaux entraînés</option></select></div>
+    <span class="live-indicator" id="simulation-status" role="status">En pause</span>
+    <nav class="cockpit-nav" aria-label="Navigation du simulateur"><button id="app-home" type="button">⌂ Accueil</button></nav>
+  </header>
+  <div class="workspace">
+    <section class="track-panel" aria-label="Circuit et télémétrie">
+      <div class="panel-heading"><span class="eyebrow" id="mode-label">ENTRAÎNEMENT · ALGORITHME GÉNÉTIQUE</span></div>
+      <div id="circuit" aria-label="Simulation du circuit"></div>
+      <div class="camera-toolbar" aria-label="Caméra">
+        <label for="camera-zoom">Zoom <output id="camera-zoom-value">×1.0</output></label>
+        <input id="camera-zoom" type="range" min="1" max="6" step="0.1" value="1" aria-label="Zoom de caméra">
+        <button id="camera-home" type="button">Vue globale</button>
+        <label class="toggle"><input id="camera-follow" type="checkbox"> Suivre la sélection</label>
+        <small>Glisser pour déplacer · molette pour zoomer</small>
+      </div>
+      <div class="track-toolbar">
+        <label>Circuit <select id="track-select"><option value="easy">Facile · large</option><option value="medium" selected>Moyen · original</option><option value="hard">Difficile · étroit</option></select></label>
+        <label class="toggle"><input type="checkbox" id="show-checkpoints"> Checkpoints</label>
+        <label class="toggle"><input type="checkbox" id="show-sensors"> Capteurs <kbd>D</kbd></label>
+      </div>
+    </section>
+    <aside class="sidebar" aria-label="Tableau de bord et entraînement">
+      <div id="training-panels">
+      <section class="panel dashboard"><h2>Télémétrie de population</h2>
+        <dl class="metrics">
+          <div><dt>Génération</dt><dd id="generation">1</dd></div>
+          <div><dt>Voitures vivantes</dt><dd id="alive">100 / 100</dd></div>
+          <div><dt>Meilleure progression</dt><dd id="progress">0 / 60</dd><small>Checkpoints · génération actuelle</small></div>
+          <div><dt>Progression moyenne</dt><dd id="mean-progress">—</dd><small>Checkpoints · dernière génération</small></div>
+          <div><dt>Taux de réussite</dt><dd id="success">—</dd><small>Dernière génération terminée</small></div>
+          <div><dt>Tours terminés</dt><dd id="finishers">—</dd><small>Dernière génération terminée</small></div>
+        </dl>
+        <div class="buttons"><button id="play" type="button" class="primary">▶ Play</button><button id="pause" type="button">Ⅱ Pause</button><button id="reset" type="button">↺ Reset</button></div>
+        <div class="garage-capture"><label for="garage-champion-name">Nom du champion (facultatif)</label><input id="garage-champion-name" type="text" maxlength="80" placeholder="Nom automatique si vide">
+          <button id="garage-save-champion" type="button" class="primary wide">Ajouter le champion au Garage</button>
+          <p id="garage-capture-feedback" class="hint" role="status" aria-live="polite">Franchissez un checkpoint ou terminez une génération pour capturer un résultat. L’entraînement continue pendant l’enregistrement.</p>
+          <a id="garage-open" href="#garage-panel">Gérer le Garage IA et les options JSON</a>
+        </div>
+        <div class="speed"><label for="simulation-speed">Vitesse de simulation <output id="speed-value">×1</output></label><div id="speed-control"></div></div>
+      </section>
+      <section class="panel"><div class="section-heading"><h2>Apprentissage</h2><small id="history-count">0 générations</small></div>
+        <div class="chart-legend"><span class="best-key">Meilleure progression</span><span class="mean-key">Moyenne</span></div>
+        <canvas id="performance-chart" width="360" height="190" role="img" aria-label="Historique des progressions en checkpoints">Historique des générations : progression moyenne et meilleure progression.</canvas>
+        <p class="hint">Checkpoints / génération · 60 dernières générations</p>
+      </section>
+      <section class="panel"><h2>Paramètres d’entraînement</h2>
+        <p class="hint">Modifier puis appliquer recrée les réseaux et la population, en pause.</p>
+        <div class="config-grid">
+          <label>Voitures · <output id="config-population-value">100</output><input data-config-slider id="config-population" type="range" min="10" max="300" step="1" value="100"></label>
+          <label>Mutation (%) · <output id="config-mutation-value">10</output><input data-config-slider id="config-mutation" type="range" min="0" max="100" step="1" value="10"></label>
+          <label>Capteurs · <output id="config-sensors-value">6</output><input data-config-slider id="config-sensors" type="range" min="3" max="15" step="1" value="6"></label>
+          <label>Vision (px) · <output id="config-sight-value">50</output><input data-config-slider id="config-sight" type="range" min="20" max="200" step="1" value="50"></label>
+          <label>Couches cachées · <output id="config-layers-value">1</output><input data-config-slider id="config-layers" type="range" min="1" max="3" step="1" value="1"></label>
+          <label data-hidden-layer="1">Neurones couche 1 · <output id="config-hidden-value">12</output><input data-config-slider id="config-hidden" type="range" min="4" max="48" step="1" value="12"></label>
+          <label data-hidden-layer="2" hidden>Neurones couche 2 · <output id="config-hidden-2-value">12</output><input data-config-slider id="config-hidden-2" type="range" min="4" max="48" step="1" value="12"></label>
+          <label data-hidden-layer="3" hidden>Neurones couche 3 · <output id="config-hidden-3-value">12</output><input data-config-slider id="config-hidden-3" type="range" min="4" max="48" step="1" value="12"></label>
+          <label>Activation des couches cachées<select id="config-activation"><option value="sigmoid">Sigmoid</option><option value="relu">ReLU</option></select></label>
+        </div>
+        <p class="topology">Topologie active <strong id="network-topology">6 → 12 → 2</strong></p>
+        <button id="apply-config" type="button" class="wide">Appliquer et réinitialiser</button>
+        <div class="buttons compact"><button id="save-config" type="button">Enregistrer config.</button><button id="load-config" type="button">Restaurer config.</button></div>
+        <details class="delivery-options"><summary>Arrêt automatique</summary>
+          <label><input id="stop-max-enabled" type="checkbox"> Limiter les générations</label>
+          <label>Maximum <input id="stop-max" type="number" min="1" max="100000" value="100"></label>
+          <label><input id="stop-success-enabled" type="checkbox"> Objectif de réussite</label>
+          <label>Tours terminés (%) <input id="stop-success" type="number" min="0" max="100" value="60"></label>
+          <button id="apply-stop" type="button">Appliquer les conditions</button>
+          <p id="training-stop-reason" role="status" class="hint"></p>
+        </details>
+        <details class="delivery-options"><summary>Générateur et sauvegarde de circuits</summary>
+          <p class="hint">Un emplacement personnel, 60 checkpoints. Générer ou importer recommence la session en pause. Les trois circuits du cours restent inchangés.</p>
+          <label>Base <select id="variant-base"><option value="easy">Facile</option><option value="medium" selected>Moyen</option><option value="hard">Difficile</option></select></label>
+          <label>Graine <input id="variant-seed" type="number" min="1" max="2147483647" value="2026"></label>
+          <label>Complexité (1–6) <input id="variant-complexity" type="number" min="1" max="6" step="0.1" value="2"></label>
+          <label>Demi-largeur (40–80) <input id="variant-width" type="number" min="40" max="80" value="60"></label>
+          <button id="track-generate" type="button">Générer et utiliser</button>
+          <div class="buttons compact"><button id="track-save" type="button">Sauvegarder circuit</button><button id="track-restore" type="button">Restaurer circuit</button></div>
+          <button id="track-export" type="button">Exporter circuit JSON</button>
+          <label class="file-label">Importer circuit JSON<input id="track-file" type="file" accept=".json,application/json"></label>
+        </details>
+      </section>
+      <section class="panel"><h2>Meilleur cerveau</h2><p class="hint">Export JSON : poids, topologie, capteurs et vision. Le chargement démarre une démonstration sans réentraînement.</p>
+        <p><a href="ml5-demo/index.html" target="_blank" rel="noopener">Atelier ML5 indépendant : reconnaissance de livrées</a></p>
+        <button id="export-brain" type="button" class="wide" disabled>Exporter le meilleur cerveau</button>
+        <label class="file-label" for="brain-file">Charger un cerveau JSON<input id="brain-file" type="file" accept=".json,application/json"></label>
+        <button id="training-mode" type="button" class="wide" disabled>Revenir à l’entraînement</button>
+      </section>
+      <p id="feedback" role="status" aria-live="polite">Circuit fixe pendant l’entraînement. Réglages du cours : 100 voitures, mutation 10 %, réseau 6 → 12 → 2.</p>
+      <details class="panel"><summary>Comment lire les résultats ?</summary><p>Progression : checkpoints franchis dans l’ordre, sur 60. Moyenne : somme des progressions divisée par la population. Réussite : voitures arrivées / population × 100.</p><p>Le graphique et les résultats portent sur les générations terminées. La fitness exponentielle du cours est conservée pour la sélection, puis normalisée en probabilités ; elle n’est pas une progression.</p><p>Reset conserve circuit et vitesse. Un changement de circuit ou de paramètres recommence une série distincte. La démonstration utilise une seule voiture aux poids figés.</p></details>
+      </div>
+      <section id="garage-panel" class="panel">
+        <details><summary>Garage IA · <span id="garage-count">chargement…</span></summary>
+          <p class="hint">Bibliothèque locale persistante. Les cerveaux enregistrés apparaissent directement dans Race, sans téléchargement.</p>
+          <p id="garage-feedback" role="status" aria-live="polite">Ouverture du Garage local…</p>
+          <div id="garage-list"></div>
+          <details class="garage-json-options"><summary>Import JSON complémentaire</summary><label class="file-label" for="garage-import">Enregistrer des fichiers dans le Garage<input id="garage-import" type="file" multiple accept=".json,application/json"></label><p class="hint">Anciens exports compatibles ; les métadonnées absentes restent inconnues.</p></details>
+          <p id="garage-storage" class="hint">Estimation du stockage en cours…</p>
+        </details>
+      </section>
+      <section id="race-panel" hidden>
+        <section class="panel"><p class="eyebrow">RACE · 1 TOUR · 2–8 CONCURRENTS</p><h2>Course à cerveaux figés</h2>
+          <p id="race-status" role="status">Importez les concurrents</p>
+          <p class="hint">Choisissez directement vos champions du Garage. Sélection commune de 2 à 8 cerveaux ; topologies et visions différentes acceptées.</p>
+          <details class="race-pilots"><summary id="race-library-summary">Choisir les concurrents</summary>
+            <details><summary>Fichiers JSON complémentaires</summary><label class="file-label" for="race-brains">Ajouter des fichiers temporaires<input id="race-brains" type="file" multiple accept=".json,application/json"></label><p class="hint">Ces fichiers peuvent compléter la sélection Garage. Maximum 16 fichiers temporaires ; pour les conserver, utilisez Import JSON dans le Garage.</p></details>
+            <div id="race-library" aria-label="Cerveaux disponibles"></div>
+          </details>
+          <label class="race-track-label" for="race-track">Circuit de compétition<select id="race-track"><option value="easy">Facile</option><option value="medium" selected>Moyen</option><option value="hard">Difficile</option></select></label>
+          <label class="race-track-label" for="race-format">Format<select id="race-format"><option value="time-trial">Contre-la-montre · départs décalés</option><option value="simultaneous">Course simultanée · séparation / évitement</option></select></label>
+          <details class="race-rule-details"><summary id="race-rules-summary">Règles et délais du format</summary><p id="race-rules" class="hint"></p></details>
+          <p id="race-interactions" class="hint" aria-live="polite"></p>
+          <button id="race-prepare" type="button" class="wide">Préparer les départs</button>
+          <div class="buttons"><button id="race-start" type="button" class="primary" disabled>▶ Start</button><button id="race-pause" type="button" disabled>Ⅱ Pause</button><button id="race-restart" type="button" disabled>↺ Restart</button></div>
+          <div id="race-speed-slot"></div>
+          <p id="race-feedback" role="status" aria-live="polite">L’entraînement est conservé en mémoire et reviendra en pause.</p>
+        </section>
+        <section class="panel race-roster"><h2>Participants · <span id="race-live">0 / 0</span></h2>
+          <div class="race-table-scroll"><table><thead><tr><th scope="col">Rang</th><th scope="col">N°</th><th scope="col">Cerveau</th><th scope="col">CP</th><th scope="col">Pas actifs</th><th scope="col">État</th></tr></thead><tbody id="race-participants"></tbody></table></div>
+          <h3>Éliminés</h3>
+          <div class="race-table-scroll"><table><thead><tr><th scope="col">N°</th><th scope="col">Cerveau</th><th scope="col">CP</th><th scope="col">Pas actifs</th><th scope="col">Cause</th></tr></thead><tbody id="race-eliminated"></tbody></table></div>
+          <p class="hint">Les arrivants sont classés par pas actifs croissants, ex æquo si nécessaire. L’attente avant le départ ne compte jamais. Les éliminés sont présentés séparément avec leur progression et leur cause.</p>
+        </section>
+        <section class="panel"><h2>Protocole de compétition</h2><p class="hint">Contre-la-montre : départs Training décalés, sans interaction. Course simultanée : grille sûre, perception des autres voitures, séparation et évitement prédictif. Les règles spécifiques et les compteurs sont affichés avec le format. Les voitures éliminées ou arrivées sont retirées de la piste.</p><p class="hint">Aucune mutation, sélection ou reproduction. Restart restaure les mêmes poids et remet les compteurs à zéro. Changer de format réinitialise la compétition. Revenir en Training retrouve sa session en pause.</p></section>
+      </section>
+      <details class="panel inspector-details" hidden><summary>Véhicule, perception et démonstration</summary>
+      <div class="telemetry"><div><span class="eyebrow">TÉLÉMÉTRIE DU VÉHICULE SÉLECTIONNÉ</span><strong id="selected-car">Aucune voiture active</strong></div><p id="network-decision">En attente d’une décision</p></div>
+      <div class="vehicle-inspector"><canvas id="car-preview" width="280" height="160" role="img" aria-label="Vue détaillée du véhicule sélectionné"></canvas><div><span class="eyebrow">CARROSSERIE & PERCEPTION</span><p>Carrosserie 10 × 5 unités. Le zoom agrandit la vue, jamais la physique.</p><small><span id="training-render-legend">Halo menthe : leader · contour bleu : sélection.<br>Le décor est purement visuel.</span><span id="race-render-legend" hidden>Contour bleu : sélection · numéro : concurrent.<br>Le décor est purement visuel.</span></small></div></div>
+      <p class="hint" id="selection-hint">Cliquez sur une voiture pour l’inspecter. Le halo menthe désigne le leader actif ; les rayons montrent sa perception et la flèche ambre sa force de steering.</p>
+      <section class="panel comparisons"><h2>Généralisation du cerveau chargé</h2><p class="hint">En démonstration, changez de circuit puis lancez Play. Les poids restent identiques.</p>
+        <table><thead><tr><th scope="col">Circuit</th><th scope="col">Progression</th><th scope="col">Tour terminé</th></tr></thead><tbody id="evaluation-results"></tbody></table>
+      </section>
+      </details>
+  <footer>Craig W. Reynolds · règles locales réactives · sélection → mutation → nouvelle génération</footer>
+    </aside>
+  </div>
+
+</main>
+<script src="nn.js"></script>
+<script src="ga.js"></script>
+<script src="ray.js"></script>
+<script src="boundary.js"></script>
+<script src="vehicle.js"></script>
+<script src="trainingConfig.js"></script>
+<script src="racingBrain.js"></script>
+<script src="racingArt.js"></script>
+<script src="racingVehicle.js"></script>
+<script src="scenery.js"></script>
+<script src="tracks.js"></script>
+<script src="trackStorage.js"></script>
+<script src="camera.js"></script>
+<script src="brainStorage.js"></script>
+<script src="garageStore.js"></script>
+<script src="garageService.js"></script>
+<script src="garageDashboard.js"></script>
+<script src="evolution.js"></script>
+<script src="performanceChart.js"></script>
+<script src="dashboard.js"></script>
+<script src="raceGrid.js"></script>
+<script src="CompetitionVehicle.js"></script>
+<script src="raceInteractions.js"></script>
+<script src="raceSession.js"></script>
+<script src="simulationModes.js"></script>
+<script src="raceDashboard.js"></script>
+<script src="simulationControls.js"></script>
+<script src="appShell.js"></script>
+<script src="sceneryViewport.js"></script>
+<script src="sketch.js"></script>
+</body>
+</html>

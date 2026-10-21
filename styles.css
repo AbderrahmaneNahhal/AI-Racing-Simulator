@@ -1,0 +1,158 @@
+:root { color-scheme: dark; font-family: 'Segoe UI',system-ui,-apple-system,sans-serif; background: #080f15; color: #e5edf5; font-variant-numeric:tabular-nums; }
+.delivery-options {margin-top:12px;}
+.delivery-options label {display:block;margin:10px 0 5px;font-size:.75rem;}
+* { box-sizing: border-box; }
+body { margin: 0; }
+[hidden] { display:none !important; }
+#training-panels { display:contents; }
+#race-panel { display:grid; gap:14px; min-width:0; grid-column:1 / -1; }
+.mode-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; font-size:.8rem; color:#b6c9d7; }
+.mode-toolbar select { color:#74f2ba; }
+.race-entry { display:flex; gap:8px; align-items:center; border-top:1px solid #293d51; padding:10px 0; }
+.race-entry label { flex:1; min-width:0; font-size:.75rem; overflow-wrap:anywhere; }
+.race-entry small { display:block; padding-left:20px; }
+.race-entry input { accent-color:#74f2ba; margin-right:6px; }
+.race-entry button { padding:6px; font-size:.65rem; }
+.race-track-label { display:flex; justify-content:space-between; gap:12px; align-items:center; margin:14px 0; font-size:.75rem; }
+#race-feedback { font-size:.75rem; line-height:1.6; color:#a6d5c2; overflow-wrap:anywhere; }
+#race-feedback.error { color:#ff9cab; }
+.race-table-scroll { overflow-x:auto; }
+#race-participants td:nth-child(2) { max-width:120px; overflow-wrap:anywhere; }
+.garage-capture { border-top:1px solid #2c4357; padding-top:14px; margin-top:16px; font-size:.72rem; }
+.garage-capture label { display:block; color:#acbed0; margin-bottom:6px; }
+.garage-capture input, .garage-actions input { min-width:0; width:100%; border:1px solid #39506a; border-radius:6px; background:#1b2b3f; color:#e8f0f7; padding:8px; font:inherit; }
+.garage-capture a { color:#a2d6bd; font-size:.7rem; }
+#garage-panel { grid-column:1 / -1; scroll-margin-top:24px; }
+.garage-card { border-top:1px solid #2c4357; padding:14px 0; overflow-wrap:anywhere; }
+.garage-card strong { font-size:.85rem; }
+.garage-actions { display:flex; gap:7px; flex-wrap:wrap; }
+.garage-actions input { flex:1 1 100%; font-size:.75rem; }
+.garage-actions button { flex:1; padding:8px 5px; font-size:.7rem; }
+#garage-feedback { color:#b7d9c7; font-size:.75rem; line-height:1.6; overflow-wrap:anywhere; }
+#garage-feedback.error, #garage-capture-feedback.error { color:#ff9cab; }
+.garage-json-options { margin-top:14px; }
+main { max-width: 1800px; margin: auto; padding: 24px 28px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 4px 0 22px; }
+.eyebrow { color: #74f2ba; font-size: .65rem; font-weight: 650; letter-spacing: .12em; }
+h1 { font-size: clamp(1.5rem, 2.6vw, 2.45rem); margin: 8px 0; letter-spacing: -.04em; }
+h1 span { color: #74f2ba; }
+.subtitle { color: #8da3b8; margin: 0; font-size: .85rem; }
+.technology { text-align: right; color: #bfccd9; font-size: .85rem; line-height: 1.9; }
+.technology span { color: #74f2ba; margin: 0 8px; }
+small, .hint { color: #97aabd; font-size: .71rem; line-height: 1.65; }
+.workspace { display: grid; grid-template-columns: minmax(0, 2.65fr) minmax(290px, 1fr); gap: 20px; align-items: start; }
+.track-panel, .sidebar { min-width: 0; }
+.track-panel { position: sticky; top: 18px; }
+.panel, .panel-heading, .track-toolbar, .telemetry { background: #121e2d; border: 1px solid #28394c; }
+.panel { padding: 18px; border-radius: 12px; }
+.panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-radius: 12px 12px 0 0; }
+.live-indicator { color: #74f2ba; font-size: .75rem; white-space: nowrap; }
+#circuit { background: #18352f; overflow: hidden; border-left: 1px solid #28394c; border-right: 1px solid #28394c; }
+#circuit canvas { display: block; width: 100% !important; height: auto !important; }
+#circuit canvas { touch-action: none; cursor: crosshair; }
+.camera-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:12px; background:#172636; border:1px solid #28394c; padding:10px 16px; font-size:.72rem; }
+.camera-toolbar > input[type=range] { width:130px; margin:0; }
+.camera-toolbar output { color:#74f2ba; margin-left:6px; }
+.camera-toolbar small { margin-left:auto; font-size:.65rem; }
+.vehicle-inspector { display:flex; align-items:center; gap:20px; border:1px solid #28394c; border-radius:10px; margin-top:12px; background:#121e2d; overflow:hidden; }
+#car-preview { display:block; width:224px; height:128px; flex-shrink:0; }
+.vehicle-inspector p { font-size:.76rem; color:#b4c9d8; line-height:1.6; margin:8px 0; }
+.vehicle-inspector > div { padding:12px 16px 12px 0; }
+@media(max-width:600px) { .vehicle-inspector { flex-direction:column; gap:0; align-items:stretch; } #car-preview { width:100%; height:auto; } .vehicle-inspector > div { padding:12px; } .camera-toolbar small { margin-left:0; } }
+.track-toolbar { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; padding: 12px 16px; border-top: 0; border-bottom: 0; font-size: .75rem; }
+.track-toolbar > label:first-child { display: flex; align-items: center; gap: 8px; margin-right: auto; }
+.toggle { display: inline-flex; gap: 6px; align-items: center; }
+input[type=checkbox], input[type=range] { accent-color: #74f2ba; }
+kbd { background: #293c50; color: #b9c9d8; padding: 1px 4px; border-radius: 3px; font: .65rem monospace; }
+.telemetry { border-radius: 0 0 12px 12px; padding: 14px 18px; display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+.telemetry strong { display: block; font-size: .8rem; margin-top: 6px; }
+.telemetry p { color: #a9c7df; font-size: .75rem; text-align: right; }
+.hint { margin: 8px 0 12px; }
+.sidebar { display: grid; gap: 14px; }
+h2 { font-size: .86rem; margin: 0 0 16px; font-weight: 600; }
+.metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px 14px; margin: 0 0 20px; }
+dt { color: #acbed0; font-size: .7rem; }
+dd { margin: 4px 0 0; color: #74f2ba; font-size: 1.35rem; font-weight: 650; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.metrics small { font-size: .62rem; }
+button, select, input[type=number] { border: 1px solid #39506a; border-radius: 6px; color: #e8f0f7; background: #1b2b3f; font: inherit; }
+button { cursor: pointer; padding: 9px 12px; font-size: .75rem; }
+button:hover:enabled { background: #2b415c; border-color: #7796af; }
+button:disabled { opacity: .4; cursor: default; }
+button.primary { background: #74f2ba; color: #0d2823; border-color: #74f2ba; font-weight: 700; }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid #74f2ba; outline-offset: 3px; }
+.buttons { display: flex; gap: 7px; }
+.buttons > button { flex: 1; }
+.compact { margin-top: 8px; }
+.compact button { font-size: .67rem; padding: 9px 6px; }
+.wide { width: 100%; margin: 5px 0; }
+.speed { margin-top: 18px; font-size: .75rem; }
+.speed label { display: flex; justify-content: space-between; }
+.speed output { color: #74f2ba; }
+input[type=range] { width: 100%; margin: 12px 0 0; }
+select { padding: 7px; max-width: 100%; }
+.section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.chart-legend { display: flex; gap: 12px; font-size: .6rem; }
+.best-key { color: #74f2ba; }.mean-key { color: #80b7ff; }
+#performance-chart { width: 100%; height: auto; display: block; margin-top: 8px; }
+.config-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.config-grid label { font-size: .7rem; color: #acbed0; }
+input[type=number] { display: block; padding: 8px; margin-top: 6px; width: 100%; min-width: 0; font-size: .8rem; }
+.topology { font-size: .7rem; color: #acbed0; line-height: 1.7; }
+.topology strong { color: #74f2ba; display: block; font-variant-numeric: tabular-nums; }
+.file-label { display: block; font-size: .7rem; color: #a5b9cc; margin: 12px 0; }
+input[type=file] { margin-top: 8px; max-width: 100%; font-size: .7rem; }
+#feedback { margin: 0; font-size: .75rem; color: #a6d5c2; line-height: 1.6; padding: 0 4px; overflow-wrap: anywhere; }
+#feedback.error { color: #ff9cab; }
+summary { cursor: pointer; font-size: .8rem; }
+details p { color: #a7b9c9; font-size: .75rem; line-height: 1.7; }
+.comparisons { margin-top: 20px; }
+table { width: 100%; border-collapse: collapse; text-align: left; font-size: .75rem; }
+th { color: #9eb4c7; font-weight: 500; }
+th, td { padding: 8px 4px; border-bottom: 1px solid #263a4b; }
+footer { color: #61788f; font-size: .7rem; padding: 24px 0 4px; }
+@media (max-width: 1000px) { main { padding: 16px; } .workspace { grid-template-columns: minmax(0, 1fr); } .track-panel { position: static; } .sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; } .technology { display: none; } }
+@media (max-width: 600px) { main { padding: 12px; } .sidebar { grid-template-columns: minmax(0, 1fr); } .telemetry { display: block; } .telemetry p { text-align: left; } .track-toolbar { gap: 12px; } .panel-heading { padding: 12px; } .panel-heading .eyebrow { font-size: .55rem; } h1 span { display: block; } }
+
+/* Paddock instrumentation: same layout and controls, richer materials/contrast. */
+body {background:radial-gradient(ellipse at 12% 0%,#203334 0,transparent 48%),radial-gradient(ellipse at 95% 20%,#172638 0,transparent 42%),#080f15;}
+.page-header {border-bottom:1px solid #314247;margin-bottom:20px;}
+.eyebrow {color:#a6d8bc;letter-spacing:.16em;}
+h1 {font-weight:750;text-shadow:0 2px 24px #0005;}
+h1 span {color:#ebc17f;}
+.technology {border-left:2px solid #b18e55;padding-left:20px;}
+.panel {background:linear-gradient(145deg,#192932,#101c26 70%);border-color:#34464c;box-shadow:0 12px 32px #0002,inset 0 1px #e0f4ec07;}
+.panel-heading {background:linear-gradient(100deg,#253b3e,#152530);border-color:#3c5357;}
+.panel-heading,.track-panel {box-shadow:0 16px 48px #0003;}
+.camera-toolbar,.track-toolbar,.telemetry {background:linear-gradient(105deg,#182d33,#15232e);border-color:#354a51;}
+.telemetry strong {color:#eac78c;}
+.vehicle-inspector {border-color:#385059;background:linear-gradient(105deg,#203741,#111e28);}
+button {border-color:#49616b;background:linear-gradient(#2a414d,#1d303d);box-shadow:inset 0 1px #e9f7ef0a;transition:border-color .16s,background .16s,box-shadow .16s,transform .16s;}
+button:hover:enabled {border-color:#d1b078;background:linear-gradient(#354c54,#263c47);box-shadow:0 3px 12px #0004;transform:translateY(-1px);}
+button:active:enabled {transform:translateY(0);}
+button.primary {background:linear-gradient(110deg,#98d7ae,#78be9c);color:#0b2425;border-color:#b8e3bd;}
+button:disabled {opacity:.45;cursor:not-allowed;}
+input,select {border-color:#405962;}
+input:focus,select:focus,button:focus-visible,a:focus-visible {outline:2px solid #ebc17f;outline-offset:3px;}
+.metrics {border-bottom:1px solid #35484e;padding-bottom:18px;}
+dd {color:#b3e6c9;font-size:1.45rem;letter-spacing:-.03em;}
+th {background:#20343e;color:#b9cdd4;font-size:.65rem;text-transform:uppercase;letter-spacing:.04em;}
+th,td {padding:10px 6px;border-color:#334750;}
+tbody tr:nth-child(even) {background:#d9eddf04;}
+tbody tr:hover {background:#b8e6cf0b;}
+#race-participants td:first-child {color:#e5c28b;font-weight:700;}
+.race-entry,.garage-card {border-color:#35494f;}
+.garage-card strong {color:#e6d1a5;}
+#race-rules {border-left:2px solid #ae9469;padding-left:10px;line-height:1.65;}
+#race-interactions {color:#b6ddce;font-variant-numeric:tabular-nums;}
+#performance-chart {background:linear-gradient(#142630,#0f1e28);border-radius:8px;}
+.live-indicator {color:#b2e0bf;}
+@media(prefers-reduced-motion:reduce){button {transition:none;} button:hover:enabled {transform:none;}}
+
+/* Illustrated circuit: restrained olive/ivory accents, unchanged panel layout. */
+body {background:radial-gradient(ellipse at 12% 0%,#303a27 0,transparent 52%),#111a1b;}
+.panel-heading {background:linear-gradient(100deg,#303c2e,#1b2b2c);}
+h1 span,.telemetry strong {color:#e5d6a3;}
+.eyebrow {color:#c9d38c;}
+button.primary {background:linear-gradient(110deg,#cad783,#a9bd63);color:#1e2d21;border-color:#d3e0a3;}
+#race-rules {border-left-color:#c2cc7b;}
+#race-interactions {color:#d9dea9;}
